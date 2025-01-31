@@ -88,7 +88,15 @@ class DeckViewModel: ObservableObject {
         saveDecks()
     }
     
-    func moveCard(from source: IndexSet, to destination: Int, in deck: Deck) {
+    func updateCard(_ updatedCard: Card, in deck: Deck) {
+        guard let deckIndex = decks.firstIndex(where: { $0.id == deck.id }),
+              let cardIndex = decks[deckIndex].cards.firstIndex(where: { $0.id == updatedCard.id }) else { return }
+        decks[deckIndex].cards[cardIndex] = updatedCard
+        decks[deckIndex].modifiedAt = Date()
+        saveDecks()
+    }
+    
+    func moveCards(in deck: Deck, from source: IndexSet, to destination: Int) {
         guard let deckIndex = decks.firstIndex(where: { $0.id == deck.id }) else { return }
         decks[deckIndex].cards.move(fromOffsets: source, toOffset: destination)
         decks[deckIndex].modifiedAt = Date()

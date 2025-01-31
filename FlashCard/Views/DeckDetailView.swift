@@ -23,9 +23,7 @@ struct DeckDetailView: View {
                     }
             }
             .onMove { from, to in
-                if let deckIndex = viewModel.decks.firstIndex(where: { $0.id == deck.id }) {
-                    viewModel.decks[deckIndex].cards.move(fromOffsets: from, toOffset: to)
-                }
+                viewModel.moveCards(in: deck, from: from, to: to)
             }
             .onDelete { indexSet in
                 for index in indexSet {
@@ -73,9 +71,8 @@ struct DeckDetailView: View {
         }
         .sheet(item: $editingCard) { card in
             CardEditView(card: card) { updatedCard in
-                if let index = deck.cards.firstIndex(where: { $0.id == card.id }) {
-                    viewModel.decks[viewModel.decks.firstIndex(where: { $0.id == deck.id })!].cards[index] = updatedCard
-                }
+                viewModel.updateCard(updatedCard, in: deck)
+                editingCard = nil
             }
         }
     }
